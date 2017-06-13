@@ -49,7 +49,7 @@ class Connection(object):
         self.watcher.set(self.sock, events)
         self.watcher.start()
 
-    def handle_error(self, msg):
+    def handle_error(self, msg, level=logging.ERROR, exc_info=True):
         '''
         Force socket close
         '''
