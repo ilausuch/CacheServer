@@ -99,7 +99,7 @@ If operation has had some mistakes
 
 More than one operation can be executed while socket is open.
 
-### Put
+### Put
 
 Insert a new element into a bank.
 
