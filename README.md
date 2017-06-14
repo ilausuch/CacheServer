@@ -151,14 +151,18 @@ Remove all elements of the bank.
 * op: Fixed to "bank.reset"
 * bank: The bank name
 
+Example:
+
+    {"op":"bank.reset","bank":"1"}
+
 ### Bank keys
 
 Get all the keys of the bank
 
-* op: Fixed to "bank.reset"
+* op: Fixed to "bank.keys"
 * bank: The bank name
 
 Example:
 
-    {"op":"bank.reset","bank":"1"}
+    {"op":"bank.keys","bank":"1"}
 
