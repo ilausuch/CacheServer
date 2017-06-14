@@ -100,13 +100,9 @@ class Worker (threading.Thread):
             try:
                 bank = op["bank"]
                 key = op["key"]
-            
-            except:
-                connection.sendError("bank, key are required")
                 
-            else:
                 # Get an element from cache
-                item = self.cache.get(op["bank"],op["key"])
+                item = self.cache.get(bank,key)
                 
                 if item == None:
                     # If it doesn't exist, will send error
@@ -114,6 +110,72 @@ class Worker (threading.Thread):
                 else:
                     # If exists will return the value
                     connection.sendData(item.value)
+            
+            except:
+                connection.sendError("bank and key are required")
+                
+        
+        elif operation == 'delete':
+            '''
+            DELETE Operation
+            '''
+            try:
+                bank = op["bank"]
+                key = op["key"]
+                
+                # Remove the element
+                self.cache.delete(op["bank"],op["key"])
+
+                # Always will return true
+                connection.sendData({})
+            
+            except:
+                connection.sendError("bank and key are required")
+                
+        
+        elif operation == 'touch':
+            '''
+            TOUCH Operation. Reset element timeout
+            '''
+            try:
+                bank = op["bank"]
+                key = op["key"]
+                
+                # Get an element from cache
+                item = self.cache.get(bank,key)
+                
+                if item == None:
+                    # If it doesn't exist, will send error
+                    connection.sendError("Invalid key")
+                else:
+                    # Reset the timeout
+                    item.resetTimeout()
+                    
+                    # If exists will return the value
+                    connection.sendData(item.value)
+            
+            except:
+                connection.sendError("bank and key are required")
+            
+        elif operation == 'bank.reset':
+            '''
+            Clear a bank
+            '''
+            try:
+                bank = op["bank"]
+            
+            except:
+                connection.sendError("bank are required")
+                
+            else:
+                bank = self.cache.getBank(bank)
+                
+                # Reset the timeout
+                bank.reset()
+
+                # If exists will return the value
+                connection.sendData({})
+        
         else:        
             connection.sendError("Invalid operation")
         

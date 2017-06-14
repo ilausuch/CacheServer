@@ -22,11 +22,9 @@ class CacheItem:
         self.value = value
         self.lifetime = lifetime
         
-        # Calcule timeout when it will die
-        if lifetime == 0:
-            self.timeout = 0
-        else:
-            self.timeout = time.time()+lifetime
+        # Start timeout
+        self.resetTimeout()
+        
             
     def checkTimeout(self):
         '''
@@ -36,6 +34,16 @@ class CacheItem:
             return True
         else:
             return self.timeout > time.time()
+        
+    def resetTimeout(self):
+        '''
+        Reset timeout
+        '''
+        # Calcule timeout when it will die
+        if self.lifetime == 0:
+            self.timeout = 0
+        else:
+            self.timeout = time.time()+self.lifetime
         
 class CacheBank:
     """
@@ -107,6 +115,14 @@ class CacheBank:
         
         # Release the lock
         self.lock.release()
+        
+    def reset(self):
+        '''
+        Remove all elemnts of the bank
+        '''
+        
+        # Set a new dictionary
+        self.dictionary={}
         
         
 class Cache:

@@ -123,11 +123,35 @@ Example:
 
 Get an element from a bank
 
-* op: Fixed to "get
+* op: Fixed to "get"
 * bank: The bank name
 * key: The key of entity
 
 Example:
 
     {"op":"get","bank":"1","key":"test1"}
+
+### Touch
+
+Reset the timeout of an element
+
+* op: Fixed to "touch"
+* bank: The bank name
+* key: The key of entity
+
+Example:
+
+    {"op":"touch","bank":"1","key":"test1"}
+
+
+### Bank reset
+
+Remove all elements of the bank. 
+
+* op: Fixed to "bank.reset"
+* bank: The bank name
+
+Example:
+
+    {"op":"bank.reset","bank":"1"}
 
