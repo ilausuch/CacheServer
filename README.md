@@ -151,6 +151,13 @@ Remove all elements of the bank.
 * op: Fixed to "bank.reset"
 * bank: The bank name
 
+### Bank keys
+
+Get all the keys of the bank
+
+* op: Fixed to "bank.reset"
+* bank: The bank name
+
 Example:
 
     {"op":"bank.reset","bank":"1"}

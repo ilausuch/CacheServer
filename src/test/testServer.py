@@ -84,8 +84,15 @@ def main():
     print "* Get element test2"
     print sendOp(sock,'{"op":"get","bank":"1","key":"test2"}')
     
+    print "* Get the keys of the bank"
+    print sendOp(sock,'{"op":"bank.keys","bank":"1"}')
+    
     print "* Clear bank"
     print sendOp(sock,'{"op":"bank.reset","bank":"1"}')
+    
+    print "* Get the keys of the bank, it will be empty"
+    print sendOp(sock,'{"op":"bank.keys","bank":"1"}')
+    
     
     print "* Get element test1, it will fail"
     print sendOp(sock,'{"op":"get","bank":"1","key":"test1"}')

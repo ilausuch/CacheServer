@@ -120,11 +120,57 @@ class CacheBank:
         '''
         Remove all elemnts of the bank
         '''
+        # Adquire the lock to protect folowing code
+        self.lock.acquire()
         
         # Set a new dictionary
         self.dictionary={}
         
+        # Release the lock
+        self.lock.release()
+    
+    def update(self):
+        '''
+        Check the expiration of all elements of the bank
+        '''
+        # Adquire the lock to protect folowing code
+        self.lock.acquire()
         
+        # Prepare and empty list of elements to remove
+        listToRemove=[]
+        
+        # Extract the list of elements to remove
+        for key in self.dictionary:
+            print key
+            if self.dictionary[key].checkTimeout() == False :
+                listToRemove.append(key)
+        
+        # Remove all these elements 
+        for key in listToRemove:
+            self.dictionary[key] = None
+                
+        # Release the lock
+        self.lock.release()
+     
+    def keys(self):
+        '''
+        Get the list of keys
+        '''
+        
+        # Update all elements of the bank
+        self.update()
+        
+        # Adquire the lock to protect folowing code
+        self.lock.acquire()
+        
+        # Return the dictionary keys
+        keys = self.dictionary.keys()
+        
+        # Release the lock
+        self.lock.release()
+        
+        return keys
+    
 class Cache:
     """
     Cache library

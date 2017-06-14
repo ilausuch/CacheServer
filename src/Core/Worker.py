@@ -168,6 +168,7 @@ class Worker (threading.Thread):
                 connection.sendError("bank are required")
                 
             else:
+                # Get the bank
                 bank = self.cache.getBank(bank)
                 
                 # Reset the timeout
@@ -175,6 +176,23 @@ class Worker (threading.Thread):
 
                 # If exists will return the value
                 connection.sendData({})
+                
+        elif operation == 'bank.keys':
+            '''
+            Clear a bank
+            '''
+            try:
+                bank = op["bank"]
+            
+            except:
+                connection.sendError("bank are required")
+                
+            else:
+                # Get the bank
+                bank = self.cache.getBank(bank)
+               
+                # If exists will return the value
+                connection.sendData(bank.keys())
         
         else:        
             connection.sendError("Invalid operation")
