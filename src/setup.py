@@ -9,7 +9,7 @@ setup (
        packages=find_packages(),
 
        # Declare your packages' dependencies here, for eg:
-       install_requires=['livev>0.9'],
+       install_requires=['pyev>0.9','flask>0.12.2'],
 
        # Fill in these to make your Egg ready for upload to
        # PyPI

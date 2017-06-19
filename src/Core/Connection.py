@@ -68,7 +68,9 @@ class Connection(object):
                 self.handle_error("error reading from {0}".format(self.sock))
         if buf:
             # Append to current buffer
-            self.buf += buf
+            self.buf += buf.decode("utf-8")
+            
+            print("Server : {0} New data => {1}".format(self.address, self.buf))
             
             # Reset read and write events
             self.reset(pyev.EV_READ | pyev.EV_WRITE)
@@ -80,7 +82,7 @@ class Connection(object):
                 # Add a new job to the queue
                 self.jobQueue.put({"op":op,"connection":self})
             except:
-                self.sendError("%s -> is not a correct job" % self.buf);
+                self.sendError("Server : {0} Is not a correct json job {1}".format(self.address,self.buf))
                 
             # Delete current buffer
             self.buf = ""
@@ -94,6 +96,7 @@ class Connection(object):
         Send a json to client
         '''
         self.buffSend = json.dumps(data)
+        
         self.internalSend()
     
     
@@ -117,10 +120,14 @@ class Connection(object):
         '''
         try:
             #Try to send message string to client
-            sent = self.sock.send(self.buffSend)
+            print ("Server : {0} sending {1} ".format(self.address, self.buffSend))
+            sent = self.sock.send(str.encode(self.buffSend))
+            print ("Server : {0} sended {1} bytes".format(self.address, sent))
+            
         except socket.error as err:
-            if err.args[0] not in NONBLOCKING:
-                self.handle_error("error writing to {0}".format(self.sock))
+            print ("Server : {0} Socket error".format(self.address))
+            #if err.args[0] not in NONBLOCKING:
+            #    self.handle_error("error writing to {0}".format(self.sock))
         else :
             self.buffSend = self.buffSend[sent:]
             if not self.buffSend:
@@ -141,4 +148,4 @@ class Connection(object):
         self.sock.close()
         self.watcher.stop()
         self.watcher = None
-        print "Closed connection"
+        print ("Closed connection")

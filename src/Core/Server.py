@@ -13,7 +13,7 @@ import signal
 import weakref
 import errno
 
-from Connection import Connection
+from .Connection import Connection
 
 
 STOPSIGNALS = (signal.SIGINT, signal.SIGTERM)
@@ -56,7 +56,7 @@ class Server (threading.Thread):
         
         self.conns = weakref.WeakValueDictionary()
         
-        print "Server : Ready"
+        print ("Server : Ready")
     
     def run(self):
         '''
@@ -68,7 +68,7 @@ class Server (threading.Thread):
         for watcher in self.watchers:
             watcher.start()
         
-        print "Server : Started"
+        print ("Server : Started")
         
         # Start event loop
         self.loop.start()
@@ -100,8 +100,7 @@ class Server (threading.Thread):
                     else:
                         raise
                 else:
-                    print "Server : New connection from:"
-                    print address
+                    print ("Server : {0} New connection".format(address))
                     
                     # Create a new connection
                     self.conns[address] = Connection(sock, address, self.loop, self.jobQueue,self.connectionCount)
@@ -134,5 +133,5 @@ class Server (threading.Thread):
         for worker in self.workers:
             worker.stop()
         
-        print "Server : Stoped"
+        print ("Server : Stoped")
             

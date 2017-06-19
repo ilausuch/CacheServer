@@ -17,7 +17,10 @@ __date__ = "$12-jun-2017 20:14:15$"
 import sys
 import pyev
 import json
-from Queue import Queue
+try:
+    from queue import Queue # For python 3
+except:
+    from Queue import Queue # For python 2
 from Core.Server import Server
 from Core.Worker import Worker
 from Core.Cache import Cache
@@ -38,7 +41,7 @@ MAIN
 def main():
     
     try:
-        f=file('config.json')
+        f=open('config.json')
         data=f.read()
         
         try:
@@ -48,13 +51,13 @@ def main():
                 SERVER_IP = cfg["SERVER_IP"]
                 SEVER_PORT = cfg["SERVER_PORT"]
             except:
-                print "Required WORKERS, SERVER_IP and SERVER_PORT in config.json"
+                print ("Required WORKERS, SERVER_IP and SERVER_PORT in config.json")
                 return
         except:
-            print "config.json must be a json"
+            print ("config.json must be a json")
             return
     except:
-        print "Requied a valid config.json file"
+        print ("Requies the config.json file")
         return
         
 

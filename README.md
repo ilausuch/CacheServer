@@ -14,6 +14,7 @@ LICENSE MIT @2017 Ivan Lausuch <ilausuch@gmail.com>
 * Number of connections only limited by system
 * Event-driven and non blocking server for minimization of CPU usage
 * Multi-thread pool of workers with death-lock protection
+* python 2 and 3 compatible
 
 ## Server
 
@@ -37,7 +38,7 @@ Example:
 
 To execute use this:
 
-    python server.py
+    python3 server.py
 
 On console will appear the initialization
 
@@ -180,4 +181,65 @@ Example:
 ## API
 
 
+### Configuration file
 
+A config.json file is required. It must include:
+
+* SERVER_IP : IP of the server
+* SERVER_PORT : Port of the server
+
+Example:
+
+    {
+        "SERVER_IP" : "127.0.0.1",
+        "SERVER_PORT" : 10001
+    }
+
+### Execution
+
+To execute use this:
+
+    python3 server.py
+
+On console will appear the initialization
+
+    * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+    * Restarting with stat
+    * Debugger is active!
+
+### Operations
+
+
+
+## Set an entry
+
+* URL : /bank/<bank>/entry/<key>
+* Method : POST
+* Data : Values to store
+
+
+## Get an entry
+
+* URL : /bank/<bank>/entry/<key>
+* Method : GET
+
+## Touch and entry
+
+* URL : /bank/<bank>/entry/<key>?op=touch
+* Method : PUT
+
+## Get all entries
+
+* URL : /bank/<bank>/entries
+* Method : GET
+
+## Get all banks
+
+* URL : /banks
+* Method : GET
+
+## Clear a bank
+
+* URL : /bank/<bank>?op=reset
+* Method : PUT
+    

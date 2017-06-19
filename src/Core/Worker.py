@@ -28,14 +28,14 @@ class Worker (threading.Thread):
         
         self.working=True
         
-        print "Worker %d : Ready" % self.id
+        print ("Worker %d : Ready" % self.id)
         
     def run(self):
         '''
         Thread loop
         '''
         
-        print "Worker %d : Started" % self.id
+        print ("Worker %d : Started" % self.id)
         
         while self.working:
             try:
@@ -58,16 +58,13 @@ class Worker (threading.Thread):
         op = job["op"]
         connection = job["connection"]
         
-        print op
-        print "working %d on job" % self.id
+        print ("Worker {0} for {1} : Processing {2}".format(self.id, connection.address,op))
         
         # Get the operation
         try:
             operation = op["op"]
         except:
             connection.sendError("Operation required")
-            
-        print "operation : %s" % op["op"]
         
         
         if operation == 'put':
@@ -204,7 +201,7 @@ class Worker (threading.Thread):
         else:        
             connection.sendError("Invalid operation")
         
-        print "working %d end job" % self.id
+        print ("working %d end job" % self.id)
         
         
     def signal_cb(self, watcher, revents):
@@ -218,4 +215,4 @@ class Worker (threading.Thread):
         Stop server
         '''
         self.working = False
-        print "Worker %d : Stoped" % self.id
+        print ("Worker %d : Stoped" % self.id)

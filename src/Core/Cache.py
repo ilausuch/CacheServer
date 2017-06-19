@@ -141,7 +141,6 @@ class CacheBank:
         
         # Extract the list of elements to remove
         for key in self.dictionary:
-            print key
             if self.dictionary[key].checkTimeout() == False :
                 listToRemove.append(key)
         
@@ -164,7 +163,7 @@ class CacheBank:
         self.lock.acquire()
         
         # Return the dictionary keys
-        keys = self.dictionary.keys()
+        keys = list(self.dictionary.keys())
         
         # Release the lock
         self.lock.release()
@@ -212,7 +211,7 @@ class Cache:
         self.lock.acquire()
         
         # Get the keys
-        keys = self.banks.keys()
+        keys = list(self.banks.keys())
         
         # Release the lock
         self.lock.release()
