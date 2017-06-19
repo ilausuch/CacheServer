@@ -37,7 +37,7 @@ Example:
 
 To execute use this:
 
-    python main.py
+    python server.py
 
 On console will appear the initialization
 
@@ -84,7 +84,7 @@ In fact any language can be used. Next example has been written in python
 
 
 
-## API
+## Operations
 
 To perform operations is required send a valid JSON with the operation parameters.
 And client will receive a JSON as response
@@ -157,7 +157,7 @@ Example:
 
 ### Bank keys
 
-Get all the keys of the bank
+List all the keys of the bank
 
 * op: Fixed to "bank.keys"
 * bank: The bank name
@@ -165,4 +165,19 @@ Get all the keys of the bank
 Example:
 
     {"op":"bank.keys","bank":"1"}
+
+
+### Bank LIST
+
+List all bank names
+
+* op: Fixed to "bank.list"
+
+Example:
+
+    {"op":"bank.list"}
+
+## API
+
+
 

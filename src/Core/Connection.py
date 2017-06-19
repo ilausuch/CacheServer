@@ -77,13 +77,14 @@ class Connection(object):
                 # Try to convert to json
                 op=json.loads(self.buf)
                 
-                # Delete current buffer
-                self.buf = ""
-                
                 # Add a new job to the queue
                 self.jobQueue.put({"op":op,"connection":self})
             except:
-                self.sendError("This is not a correct job");
+                self.sendError("%s -> is not a correct job" % self.buf);
+                
+            # Delete current buffer
+            self.buf = ""
+                
         else:
             self.handle_error("connection closed by peer", logging.DEBUG, False)
     

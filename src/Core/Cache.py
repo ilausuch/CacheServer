@@ -205,6 +205,21 @@ class Cache:
         
         # Return the selected bank
         return bank
+    
+    def getBanks(self):
+        
+         # Adquire the lock to protect folowing code
+        self.lock.acquire()
+        
+        # Get the keys
+        keys = self.banks.keys()
+        
+        # Release the lock
+        self.lock.release()
+        
+        # Return the list of key names
+        return keys
+        
             
     def get(self, bankName, key):
         # Get a item from a bank

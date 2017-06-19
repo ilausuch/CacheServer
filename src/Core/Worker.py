@@ -85,7 +85,7 @@ class Worker (threading.Thread):
                     lifetime = 0
                 
                 # Put the value on cache
-                self.cache.put(bank,CacheItem(key,value,lifetime))
+                self.cache.put(bank,CacheItem(key, value, lifetime))
                 
                 # Send OK
                 connection.sendData({}) 
@@ -156,43 +156,50 @@ class Worker (threading.Thread):
             
             except:
                 connection.sendError("bank and key are required")
-            
+        
+        elif operation == 'bank.list':
+            '''
+            List the banks
+            '''
+            # If exists will return the value
+            connection.sendData(self.cache.getBanks())
+                
         elif operation == 'bank.reset':
             '''
             Clear a bank
             '''
             try:
                 bank = op["bank"]
-            
-            except:
-                connection.sendError("bank are required")
                 
-            else:
                 # Get the bank
                 bank = self.cache.getBank(bank)
-                
+
                 # Reset the timeout
                 bank.reset()
 
                 # If exists will return the value
                 connection.sendData({})
-                
+            
+            except:
+                connection.sendError("bank are required")
+             
         elif operation == 'bank.keys':
             '''
             Clear a bank
             '''
             try:
                 bank = op["bank"]
-            
-            except:
-                connection.sendError("bank are required")
                 
-            else:
                 # Get the bank
                 bank = self.cache.getBank(bank)
                
                 # If exists will return the value
                 connection.sendData(bank.keys())
+            
+            except:
+                connection.sendError("bank are required")
+            
+                
         
         else:        
             connection.sendError("Invalid operation")
