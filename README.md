@@ -14,7 +14,7 @@ LICENSE MIT @2017 Ivan Lausuch <ilausuch@gmail.com>
 * Number of connections only limited by system
 * Event-driven and non blocking server for minimization of CPU usage
 * Multi-thread pool of workers with death-lock protection
-* python 2 and 3 compatible
+* Python 2 and 3 compatible
 
 ## Server
 
@@ -213,24 +213,24 @@ On console will appear the initialization
 
 ## Set an entry
 
-* URL : /bank/<bank>/entry/<key>
+* URL : /bank/\<bank\>/entry/\<key\>
 * Method : POST
 * Data : Values to store
 
 
 ## Get an entry
 
-* URL : /bank/<bank>/entry/<key>
+* URL : /bank/\<bank\>/entry/\<key\>
 * Method : GET
 
 ## Touch and entry
 
-* URL : /bank/<bank>/entry/<key>?op=touch
+* URL : /bank/\<bank\>/entry/\<key\>?op=touch
 * Method : PUT
 
 ## Get all entries
 
-* URL : /bank/<bank>/entries
+* URL : /bank/\<bank\>/entries
 * Method : GET
 
 ## Get all banks
@@ -240,6 +240,6 @@ On console will appear the initialization
 
 ## Clear a bank
 
-* URL : /bank/<bank>?op=reset
+* URL : /bank/\<bank\>?op=reset
 * Method : PUT
     
