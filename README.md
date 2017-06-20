@@ -242,7 +242,7 @@ On console will appear the initialization
 * URL : /banks
 * Method : GET
 
-## Clear a bank
+#### Clear a bank
 
 * URL : /bank/\<bank\>?op=reset
 * Method : PUT
