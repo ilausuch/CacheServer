@@ -1,8 +1,8 @@
 #! /usr/bin/python
-
-# To change this license header, choose License Headers in Project Properties.
-# To change this template file, choose Tools | Templates
-# and open the template in the editor.
+'''
+	Restful API for Multi-thread Cache system
+	LICENSE MIT @2017 Ivan LAusuch <ilausuch@gmail.com>
+'''
 
 __author__ = "ilausuch"
 __date__ = "$16-jun-2017 22:31:10$"
@@ -21,6 +21,7 @@ from APICore.Entity import Entity
 from APICore.Bank import Bank
 from APICore.Cache import Cache
 
+# By default values
 SERVER_IP = "127.0.0.1"
 SEVER_PORT = 10001
 
@@ -116,5 +117,5 @@ def banks():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host= '0.0.0.0',debug=True)
     

@@ -180,6 +180,10 @@ Example:
 
 ## API
 
+With Cache Server, there are a RESTful API. 
+
+This is optional and only interesting if you don't want to access directly to 
+Server Cache Port. 
 
 ### Configuration file
 
@@ -211,29 +215,29 @@ On console will appear the initialization
 
 
 
-## Set an entry
+#### Set an entry
 
 * URL : /bank/\<bank\>/entry/\<key\>
 * Method : POST
 * Data : Values to store
 
 
-## Get an entry
+#### Get an entry
 
 * URL : /bank/\<bank\>/entry/\<key\>
 * Method : GET
 
-## Touch and entry
+#### Touch and entry
 
 * URL : /bank/\<bank\>/entry/\<key\>?op=touch
 * Method : PUT
 
-## Get all entries
+#### Get all entries
 
 * URL : /bank/\<bank\>/entries
 * Method : GET
 
-## Get all banks
+#### Get all banks
 
 * URL : /banks
 * Method : GET
@@ -243,3 +247,59 @@ On console will appear the initialization
 * URL : /bank/\<bank\>?op=reset
 * Method : PUT
     
+
+## Create your own client
+
+A python client can be created using Addons/Client.py that eases this task.
+
+### Inicialization
+
+First, a client object is required. It needs the cache IP and Port
+
+    client=Client(<SERVER_IP>,<SEVER_PORT>)
+
+
+### Operations
+
+
+#### Add or replace a entry
+
+    entry_set(self,bank,key,value,lifetime=0)
+      
+#### Get an entry
+
+    entry_get(self,bank,key)
+        
+#### Touch an entry (Update the timeout of an entry)
+
+    entry_touch(self,bank,key)
+      
+#### Get all entries of a bank (only keys)
+    
+    bank_keys(self,bank)
+
+#### Reset a bank (Remove all entries)
+    
+    bank_reset(self, bank)
+
+#### Get the list of banks
+
+    bank_list(self)
+
+
+### General operations
+
+All operations of Cache server can be solved with the list of operations above. 
+Although these are the general operations you can use too
+
+#### Send a generic message to cache system
+
+    send(self,msg):
+
+#### Recieve a generic response from cache system.
+
+    receive(self):
+       
+#### Send an operation to cache system, and wait for any response
+
+    sendOp(self,op)

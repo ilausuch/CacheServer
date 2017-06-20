@@ -25,6 +25,7 @@ from Core.Server import Server
 from Core.Worker import Worker
 from Core.Cache import Cache
 
+# By default values
 WORKERS = 4
 SERVER_IP = "127.0.0.1"
 SEVER_PORT = 10001
