@@ -31,6 +31,12 @@ class Connection(object):
         self.jobQueue=jobQueue
         self.id=id
         
+        # Lock used to prevent that two or more workers execute jobs of the same connection
+        # It prevents, problems with the shared socket resource
+        # and helps to mantain better adverage time of response for all 
+        # connections preventing the abuse of any of them
+        self.lock=threading.Lock()
+        
         self.buf = ""
         
         '''
@@ -81,6 +87,7 @@ class Connection(object):
                 
                 # Add a new job to the queue
                 self.jobQueue.put({"op":op,"connection":self})
+                
             except:
                 self.sendError("Server : {0} Is not a correct json job {1}".format(self.address,self.buf))
                 
@@ -125,14 +132,24 @@ class Connection(object):
             print ("Server : {0} sended {1} bytes".format(self.address, sent))
             
         except socket.error as err:
+            # Release connection lock
+            self.lock.release()
+            
+            # Print error
             print ("Server : {0} Socket error".format(self.address))
-            #if err.args[0] not in NONBLOCKING:
-            #    self.handle_error("error writing to {0}".format(self.sock))
+            
+            # Close connection
+            self.close()
         else :
+            # Release connection lock
+            self.lock.release()
+            '''
+            # Update buffer to 
             self.buffSend = self.buffSend[sent:]
             if not self.buffSend:
                 self.reset(pyev.EV_READ)
-    
+            '''
+            
 
     def io_cb(self, watcher, revents):
         '''

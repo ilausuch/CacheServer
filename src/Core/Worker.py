@@ -39,8 +39,9 @@ class Worker (threading.Thread):
         
         while self.working:
             try:
+                
                 # Get a new job with 1 second timeout
-                job = self.jobQueue.get(True,1)
+                job = self.jobQueue.get()
                 
                 # Work on the job
                 self.work(job)
@@ -57,6 +58,9 @@ class Worker (threading.Thread):
         
         op = job["op"]
         connection = job["connection"]
+        
+        # Worker adquire connection lock
+        connection.lock.acquire()
         
         print ("Worker {0} for {1} : Processing {2}".format(self.id, connection.address,op))
         

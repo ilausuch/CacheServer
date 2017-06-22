@@ -5,10 +5,13 @@
 __author__ = "ilausuch"
 __date__ = "$13-jun-2017 20:33:29$"
 
+
 import sys
 import os
 sys.path.append(os.path.abspath("../Core"))
+sys.path.append(os.path.abspath("../Addons"))
 
+from Timer import Timer
 from Cache import Cache, CacheItem
 
 if __name__ == "__main__":
@@ -23,3 +26,10 @@ if __name__ == "__main__":
     print (cache.get("Bank2","key1").value)
     
     print (cache.getBanks())
+    
+    timer=Timer()
+    
+    for i in range(0,1000000):
+        cache.put("Bank1",CacheItem(i,i))
+    
+    print (timer.end())

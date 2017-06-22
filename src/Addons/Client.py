@@ -72,3 +72,6 @@ class Client:
         Get the list of banks
         '''
         return self.sendOp('{"op":"bank.list"}')
+    
+    def close(self):
+        self.sock.close()
