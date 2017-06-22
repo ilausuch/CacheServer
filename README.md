@@ -303,3 +303,7 @@ Although these are the general operations you can use too
 #### Send an operation to cache system, and wait for any response
 
     sendOp(self,op)
+
+
+## Tests
+
