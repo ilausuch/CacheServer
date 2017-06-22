@@ -305,5 +305,58 @@ Although these are the general operations you can use too
     sendOp(self,op)
 
 
-## Tests
+## Performance Study
 
+A AWS instance has been used with these features:
+
+- 512 Mb Ram
+- 512 Mb Swap SSD
+- 1 vCPU
+
+Python 3 has been used to run these studies
+
+
+### Study 1
+
+In this test cache speed time is checked. Using testCache.py 
+
+The client send 100.000 operations in each test. Each test is repeated 9 times to
+get and Adverage time. The tests are:
+
+* Test 1: 100.000 put operations
+* Test 2: 100.000 get operations
+
+Results:
+
+|        |   1  |   2  |   3  |   4  |   5  |   6  |   7  |   8  |   9  |  Adv |   Per operation   |
+|--------|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:-----------------:|
+| Test 1 | 0,13 | 0,13 | 0,13 | 0,14 | 0,13 | 0,13 | 0,13 | 0,14 | 0,13 | 0,12 | 0,001 miliseconds |
+| Test 2 | 0,22 | 0,23 | 0,23 | 0,23 | 0,23 | 0,23 | 0,22 | 0,23 | 0,23 | 0,21 | 0,002 miliseconds |
+
+* Test 1 (get): 828.859 operations per second
+* Test 2 (put): 485.514 operations per second
+
+
+### Study 2
+
+In this test response time is checked. One server and one client in the same 
+machine to reduce the impact of connection latency
+
+The client send 10.000 operations in each test. Each test is repeated 9 times to
+get and Adverage time. The tests are:
+
+* Test 1: In one connection to server, send 10.000 put operations
+* test 2: Send 10.000 put operations opening and closing the connections
+* Test 3: In one connection to server, send 10.000 get operations
+
+Results:
+
+|        |   1  |   2  |   3  |   4  |   5  |   6  |   7  |   8  |   9  |  Adv |   Per operation   |
+|--------|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:-----------------:|
+| Test 1 | 0,99 | 1,01 | 1,02 | 1,04 | 1,00 | 1,03 | 0,97 | 0,98 | 1,00 | 0,90 | 0,09 miliseconds  |
+| Test 2 | 2,44 | 2,47 | 2,52 | 2,55 | 2,54 | 2,55 | 2,45 | 2,38 | 2,48 | 2,24 | 0,22 miliseconds  |
+| Test 3 | 0,85 | 0,86 | 0,88 | 0,88 | 0,89 | 0,87 | 0,84 | 0,83 | 0,86 | 0,78 | 0,078 miliseconds |
+
+* Test 1 (put): 12.871 operations per second
+* Test 2 (get): 11.064 operations per second
+* Test 3 (get with reconnections): 4.468 operations per second
