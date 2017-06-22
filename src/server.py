@@ -29,6 +29,7 @@ from Core.Cache import Cache
 WORKERS = 4
 SERVER_IP = "127.0.0.1"
 SEVER_PORT = 10001
+VERBOSE = 0
 
 '''
 Cache system
@@ -51,6 +52,7 @@ def main():
                 WORKERS = cfg["WORKERS"]
                 SERVER_IP = cfg["SERVER_IP"]
                 SEVER_PORT = cfg["SERVER_PORT"]
+                VERBOSE = cfg["VERBOSE"]
             except:
                 print ("Required WORKERS, SERVER_IP and SERVER_PORT in config.json")
                 return
@@ -68,12 +70,12 @@ def main():
     # Create workers
     workers = []
     for id in range(WORKERS):
-        worker = Worker(id,jobQueue,cache)
+        worker = Worker(id,jobQueue,cache,VERBOSE)
         workers.append(worker)
         worker.start()
     
     # Create server
-    server = Server(jobQueue,workers)
+    server = Server(jobQueue,workers,VERBOSE)
     server.connect((SERVER_IP,SEVER_PORT))
     server.start()
     

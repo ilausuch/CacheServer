@@ -15,7 +15,7 @@ class Worker (threading.Thread):
     """
     Server
     """
-    def __init__(self,id, jobQueue, cache):
+    def __init__(self,id, jobQueue, cache, verbose):
         '''
         Initialize thread
         '''
@@ -25,6 +25,7 @@ class Worker (threading.Thread):
         self.id = id
         self.jobQueue = jobQueue
         self.cache = cache
+        self.verbose = verbose
         
         self.working=True
         
@@ -62,7 +63,8 @@ class Worker (threading.Thread):
         # Worker adquire connection lock
         connection.lock.acquire()
         
-        print ("Worker {0} for {1} : Processing {2}".format(self.id, connection.address,op))
+        if self.verbose:
+            print ("Worker {0} for {1} : Processing {2}".format(self.id, connection.address,op))
         
         # Get the operation
         try:
@@ -205,7 +207,8 @@ class Worker (threading.Thread):
         else:        
             connection.sendError("Invalid operation")
         
-        print ("working %d end job" % self.id)
+        if self.verbose:
+            print ("working %d end job" % self.id)
         
         
     def signal_cb(self, watcher, revents):
@@ -219,4 +222,5 @@ class Worker (threading.Thread):
         Stop server
         '''
         self.working = False
+        
         print ("Worker %d : Stoped" % self.id)

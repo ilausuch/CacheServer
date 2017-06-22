@@ -13,6 +13,7 @@ import signal
 import weakref
 import errno
 
+
 from .Connection import Connection
 
 
@@ -21,7 +22,7 @@ NONBLOCKING = (errno.EAGAIN, errno.EWOULDBLOCK)
 
 class Server (threading.Thread):
     
-    def __init__(self, jobQueue, workers):
+    def __init__(self, jobQueue, workers,verbose):
         '''
         Initialize thread and other parameters
         '''
@@ -30,6 +31,8 @@ class Server (threading.Thread):
         self.jobQueue = jobQueue
         self.workers = workers
         self.connectionCount = 0
+        
+        self.verbose = verbose
         
     def connect(self, address):
         '''
@@ -100,10 +103,15 @@ class Server (threading.Thread):
                     else:
                         raise
                 else:
-                    print ("Server : {0} New connection".format(address))
+                    if self.verbose:
+                        print ("Server : {0} New connection".format(address))
                     
                     # Create a new connection
-                    self.conns[address] = Connection(sock, address, self.loop, self.jobQueue,self.connectionCount)
+                    self.conns[address] = Connection(sock, address, 
+                        self.loop, 
+                        self.jobQueue, 
+                        self.connectionCount, 
+                        self.verbose)
                     
                     # Increase connection counter
                     self.connectionCount=self.connectionCount+1
