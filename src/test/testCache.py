@@ -33,7 +33,7 @@ if __name__ == "__main__":
     for i in range(0,count):
         cache.put("Bank1",CacheItem(i,i))
     
-    print ("{0} insertions in {1} seconds".format(count,timer.end()))
+    print ("{0} puts in {1} seconds".format(count,timer.end()))
     
     
     timer=Timer()
@@ -41,4 +41,4 @@ if __name__ == "__main__":
     for i in range(0,count):
         cache.get("Bank1",i)
     
-    print ("{0} insertions in {1} seconds".format(count,timer.end()))
+    print ("{0} gets in {1} seconds".format(count,timer.end()))
