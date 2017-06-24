@@ -1,6 +1,23 @@
 # CacheServer
 
-Multi-thread Cache system based on Banks of entities. A bank is a group of entities.
+Python Multi-thread Cache server
+
+It provides a socket connection with json communication protocol. Also is provided 
+a python client.
+
+Additionally a REST API is provided to make easy the connection with any client.
+
+The cache are didived in individual caches called "Banks" that have independent 
+space of keys, so it is easy to organize hetereogenic information in the same
+cache server and increase the speed of search methods.
+
+At the last section of this document you can find some performance studies that
+has been done. The performance usign a simple server with one CPU (AWS instance) 
+is: 
+
+* 12.871 PUT operations per second
+* 11.064 GET operations per second
+
 
 ## License
 
@@ -11,7 +28,7 @@ LICENSE MIT @2017 Ivan Lausuch <ilausuch@gmail.com>
 * Unlimited entries per bank
 * Unlimited banks
 * Entries with optional lifetime
-* Number of connections only limited by system
+* Multiple socket connection
 * Event-driven and non blocking server for minimization of CPU usage
 * Multi-thread pool of workers with death-lock protection
 * Python 2 and 3 compatible
