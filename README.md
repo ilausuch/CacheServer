@@ -7,8 +7,6 @@ a python client.
 
 Additionally a REST API is provided to make easy the connection with any client.
 
-You can also find a UI for managing the server at https://github.com/ilausuch/CacheServer-Admin
-
 The cache are didived in individual caches called "Banks" that have independent 
 space of keys, so it is easy to organize hetereogenic information in the same
 cache server and increase the speed of search methods.
@@ -20,6 +18,7 @@ is:
 * 12.871 PUT operations per second
 * 11.064 GET operations per second
 
+You can also find a UI for managing the server at https://github.com/ilausuch/CacheServer-Admin
 
 ## License
 
