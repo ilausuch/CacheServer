@@ -17,16 +17,6 @@ from Cache import Cache, CacheItem
 if __name__ == "__main__":
     cache=Cache()
     
-    cache.put("Bank1",CacheItem("key1","val1"))
-    cache.put("Bank2",CacheItem("key1","val1.1"))
-    cache.put("Bank2",CacheItem("key1","val1bis"))
-    cache.put("Bank1",CacheItem("key2","val2"))
-    print (cache.get("Bank1","key1").value)
-    print (cache.get("Bank1","key2").value)
-    print (cache.get("Bank2","key1").value)
-    
-    print (cache.getBanks())
-    
     count=100000
     timer=Timer()
     
