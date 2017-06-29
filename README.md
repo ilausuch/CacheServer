@@ -34,6 +34,11 @@ LICENSE MIT @2017 Ivan Lausuch <ilausuch@gmail.com>
 * Multi-thread pool of workers with death-lock protection
 * Python 2 and 3 compatible
 
+Others features:
+
+* Unity tests
+* Logging with verbose mode
+
 ## Server
 
 ### Configuration file
@@ -341,6 +346,10 @@ Although these are the general operations you can use too
 
 ## Unity tests
 
+There are two unity test.
+
+* Cache class test: ut_cache.py
+* Server test: ut_server.py
 
 
 ## Performance Study
