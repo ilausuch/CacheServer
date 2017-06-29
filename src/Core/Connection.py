@@ -160,7 +160,8 @@ class Connection(object):
         Close connection with socket and stop watchers
         '''
         self.sock.close()
-        self.watcher.stop()
-        self.watcher = None
+        if self.watcher != None:
+            self.watcher.stop()
+            self.watcher = None
         
         logging.debug("Closed connection")
