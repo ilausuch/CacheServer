@@ -2,18 +2,18 @@
 
 Python Multi-thread Cache server
 
-It provides a socket connection with json communication protocol. Also is provided 
+It provides a socket connection with json communication protocol. Also is provided
 a python client.
 
 Additionally a REST API is provided to make easy the connection with any client.
 
-The cache are didived in individual caches called "Banks" that have independent 
-space of keys, so it is easy to organize hetereogenic information in the same
+The cache are divided in individual caches called "Banks" that have independent
+space of keys, so it is easy to organize heterogeneous information in the same
 cache server and increase the speed of search methods.
 
 At the last section of this document you can find some performance studies that
-has been done. The performance usign a simple server with one CPU (AWS instance) 
-is: 
+has been done. The performance using a simple server with one CPU (AWS instance)
+is:
 
 * 12.871 PUT operations per second (python 3)
 * 11.064 GET operations per second (python 3)
@@ -38,6 +38,11 @@ Others features:
 
 * Unity tests
 * Logging with verbose mode
+
+## Requeriments
+
+* livev
+* flask
 
 ## Server
 
@@ -80,7 +85,7 @@ On console will appear the initialization
 
 ## Client
 
-To connect to server only is required a socket connection. 
+To connect to server only is required a socket connection.
 In fact any language can be used. Next example has been written in python
 
     import socket
@@ -102,7 +107,7 @@ In fact any language can be used. Next example has been written in python
 
         print sendOp(sock,'{"op":"put","bank":"1","key":"test1","value":"test1v","lifetime":1}')
         print sendOp(sock,'{"op":"get","bank":"1","key":"test1"}')
-        
+
     if __name__ == "__main__":
         main()
 
@@ -183,7 +188,7 @@ Example:
 
 ### Bank reset
 
-Remove all elements of the bank. 
+Remove all elements of the bank.
 
 * op: Fixed to "bank.reset"
 * bank: The bank name
@@ -216,10 +221,10 @@ Example:
 
 ## API
 
-With Cache Server, there are a RESTful API. 
+With Cache Server, there are a RESTful API.
 
-This is optional and only interesting if you don't want to access directly to 
-Server Cache Port. 
+This is optional and only interesting if you don't want to access directly to
+Server Cache Port.
 
 ### Configuration file
 
@@ -282,13 +287,13 @@ On console will appear the initialization
 
 * URL : /bank/\<bank\>?op=reset
 * Method : PUT
-    
+
 
 ## Create your own client
 
 A python client can be created using Addons/Client.py that eases this task.
 
-### Inicialization
+### initialization
 
 First, a client object is required. It needs the cache IP and Port
 
@@ -301,7 +306,7 @@ First, a client object is required. It needs the cache IP and Port
 #### Add or replace a entry
 
     entry_set(self,bank,key,value,lifetime=0)
-      
+
 #### Get an entry
 
     entry_get(self,bank,key)
@@ -309,17 +314,17 @@ First, a client object is required. It needs the cache IP and Port
 #### Delete an entry
 
     entry_delete(self,bank,key)
-        
+
 #### Touch an entry (Update the timeout of an entry)
 
     entry_touch(self,bank,key)
-      
+
 #### Get all entries of a bank (only keys)
-    
+
     bank_keys(self,bank)
 
 #### Reset a bank (Remove all entries)
-    
+
     bank_reset(self, bank)
 
 #### Get the list of banks
@@ -329,17 +334,17 @@ First, a client object is required. It needs the cache IP and Port
 
 ### General operations
 
-All operations of Cache server can be solved with the list of operations above. 
+All operations of Cache server can be solved with the list of operations above.
 Although these are the general operations you can use too
 
 #### Send a generic message to cache system
 
     send(self,msg):
 
-#### Recieve a generic response from cache system.
+#### Receive a generic response from cache system.
 
     receive(self):
-       
+
 #### Send an operation to cache system, and wait for any response
 
     sendOp(self,op)
@@ -365,20 +370,20 @@ Python 3 (v3.5.2) has been used to run these studies
 
 ### Study 1
 
-In this test cache speed time is checked. Using testCache.py 
+In this test cache speed time is checked. Using testCache.py
 
 The client send 100.000 operations in each test. Each test is repeated 9 times to
-get and Adverage time. The tests are:
+get and Average time. The tests are:
 
 * Test 1: 100.000 put operations
 * Test 2: 100.000 get operations
 
 Results:
 
-|        |   1  |   2  |   3  |   4  |   5  |   6  |   7  |   8  |   9  |  Adv |   Per operation   |
+|        |   1  |   2  |   3  |   4  |   5  |   6  |   7  |   8  |   9  |  Average |   Per operation   |
 |--------|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:-----------------:|
-| Test 1 | 0,13 | 0,13 | 0,13 | 0,14 | 0,13 | 0,13 | 0,13 | 0,14 | 0,13 | 0,12 | 0,001 miliseconds |
-| Test 2 | 0,22 | 0,23 | 0,23 | 0,23 | 0,23 | 0,23 | 0,22 | 0,23 | 0,23 | 0,21 | 0,002 miliseconds |
+| Test 1 | 0,13 | 0,13 | 0,13 | 0,14 | 0,13 | 0,13 | 0,13 | 0,14 | 0,13 | 0,12 | 0,001 milliseconds |
+| Test 2 | 0,22 | 0,23 | 0,23 | 0,23 | 0,23 | 0,23 | 0,22 | 0,23 | 0,23 | 0,21 | 0,002 milliseconds |
 
 * Test 1 (get): 828.859 operations per second
 * Test 2 (put): 485.514 operations per second
@@ -386,11 +391,11 @@ Results:
 
 ### Study 2
 
-In this test response time is checked. One server and one client in the same 
+In this test response time is checked. One server and one client in the same
 machine to reduce the impact of connection latency
 
 The client send 10.000 operations in each test. Each test is repeated 9 times to
-get and Adverage time. The tests are:
+get and Average time. The tests are:
 
 * Test 1: In one connection to server, send 10.000 put operations
 * test 2: Send 10.000 put operations opening and closing the connections
@@ -398,7 +403,7 @@ get and Adverage time. The tests are:
 
 Results:
 
-|        |   1  |   2  |   3  |   4  |   5  |   6  |   7  |   8  |   9  |  Adv |   Per operation   |
+|        |   1  |   2  |   3  |   4  |   5  |   6  |   7  |   8  |   9  |  Average |   Per operation   |
 |--------|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:-----------------:|
 | Test 1 | 0,99 | 1,01 | 1,02 | 1,04 | 1,00 | 1,03 | 0,97 | 0,98 | 1,00 | 0,90 | 0,09 miliseconds  |
 | Test 2 | 2,44 | 2,47 | 2,52 | 2,55 | 2,54 | 2,55 | 2,45 | 2,38 | 2,48 | 2,24 | 0,22 miliseconds  |
@@ -412,10 +417,10 @@ Results:
 # Python versions study
 
 The aim of this test is to check the speed using (Python 2, Python 3 and Pypy)
-usign testCache_speed.py script. In this case a personal computer has been used, 
-however the important thing is the comparation between the python clients.
+usign testCache_speed.py script. In this case a personal computer has been used,
+however the important thing is the comparison between the python clients.
 
-Results: 
+Results:
 
 |                 | 100.000 PUTs     | 100.000 GETs     |
 |-----------------|------------------|------------------|
@@ -425,5 +430,5 @@ Results:
 
 Conclusion:
 
-* Pypy is faster with hudge difference with others. Is 3 times faster than python3 for puts operations, and 6 times faster for get operations
+* Pypy is faster with huge difference with others. Is 3 times faster than python3 for puts operations, and 6 times faster for get operations
 * And python 3 is better than python 2. Is 2 times faster for puts and 3 times faster for gets
