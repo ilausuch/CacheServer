@@ -16,11 +16,11 @@ import signal
 import weakref
 import errno
 import json
-
+import logging
 
 class Connection(object):
 
-    def __init__(self, sock, address, loop, jobQueue, id, verbose):
+    def __init__(self, sock, address, loop, jobQueue, id):
         '''
         Constructor
         '''
@@ -31,7 +31,6 @@ class Connection(object):
         self.sock.setblocking(0)
         self.jobQueue = jobQueue
         self.id = id
-        self.verbose = verbose
         
         # Lock used to prevent that two or more workers execute jobs of the same connection
         # It prevents, problems with the shared socket resource
@@ -78,8 +77,7 @@ class Connection(object):
             # Append to current buffer
             self.buf += buf.decode("utf-8")
             
-            if self.verbose:
-                print("Server : {0} New data => {1}".format(self.address, self.buf))
+            logging.debug("Server : {0} New data => {1}".format(self.address, self.buf))
                 
             # Reset read and write events
             self.reset(pyev.EV_READ | pyev.EV_WRITE)
@@ -130,33 +128,24 @@ class Connection(object):
         '''
         try:
             #Try to send message string to client
-            if self.verbose:
-                print ("Server : {0} sending {1} ".format(self.address, self.buffSend))
+            logging.debug("Server : {0} sending {1} ".format(self.address, self.buffSend))
             
             sent = self.sock.send(str.encode(self.buffSend))
             
-            if self.verbose:
-                print ("Server : {0} sended {1} bytes".format(self.address, sent))
+            logging.debug("Server : {0} sended {1} bytes".format(self.address, sent))
             
         except socket.error as err:
             # Release connection lock
             self.lock.release()
             
             # Print error
-            if self.verbose:
-                print ("Server : {0} Socket error".format(self.address))
+            logging.debug("Server : {0} Socket error".format(self.address))
             
             # Close connection
             self.close()
         else :
             # Release connection lock
             self.lock.release()
-            '''
-            # Update buffer to 
-            self.buffSend = self.buffSend[sent:]
-            if not self.buffSend:
-                self.reset(pyev.EV_READ)
-            '''
             
 
     def io_cb(self, watcher, revents):
@@ -174,5 +163,4 @@ class Connection(object):
         self.watcher.stop()
         self.watcher = None
         
-        if self.verbose:
-            print ("Closed connection")
+        logging.debug("Closed connection")

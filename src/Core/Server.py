@@ -12,6 +12,7 @@ import socket
 import signal
 import weakref
 import errno
+import logging
 
 
 from .Connection import Connection
@@ -22,7 +23,7 @@ NONBLOCKING = (errno.EAGAIN, errno.EWOULDBLOCK)
 
 class Server (threading.Thread):
     
-    def __init__(self, jobQueue, workers,verbose):
+    def __init__(self, jobQueue, workers):
         '''
         Initialize thread and other parameters
         '''
@@ -32,7 +33,6 @@ class Server (threading.Thread):
         self.workers = workers
         self.connectionCount = 0
         
-        self.verbose = verbose
         
     def connect(self, address):
         '''
@@ -59,7 +59,7 @@ class Server (threading.Thread):
         
         self.conns = weakref.WeakValueDictionary()
         
-        print ("Server : Ready")
+        logging.info("Server : Ready")
     
     def run(self):
         '''
@@ -71,7 +71,7 @@ class Server (threading.Thread):
         for watcher in self.watchers:
             watcher.start()
         
-        print ("Server : Started")
+        logging.info("Server : Started")
         
         # Start event loop
         self.loop.start()
@@ -103,15 +103,13 @@ class Server (threading.Thread):
                     else:
                         raise
                 else:
-                    if self.verbose:
-                        print ("Server : {0} New connection".format(address))
+                    logging.debug("Server : {0} New connection".format(address))
                     
                     # Create a new connection
                     self.conns[address] = Connection(sock, address, 
                         self.loop, 
                         self.jobQueue, 
-                        self.connectionCount, 
-                        self.verbose)
+                        self.connectionCount)
                     
                     # Increase connection counter
                     self.connectionCount=self.connectionCount+1
@@ -141,5 +139,5 @@ class Server (threading.Thread):
         for worker in self.workers:
             worker.stop()
         
-        print ("Server : Stoped")
+        logging.info("Server : Stoped")
             

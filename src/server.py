@@ -17,6 +17,10 @@ __date__ = "$12-jun-2017 20:14:15$"
 import sys
 import pyev
 import json
+import logging
+
+loggingFormat='%(asctime)s:%(levelname)s:%(message)s'
+
 try:
     from queue import Queue # For python 3
 except:
@@ -62,6 +66,11 @@ def main():
     except:
         print ("Requies the config.json file")
         return
+    
+    if VERBOSE:
+        logging.basicConfig(format=loggingFormat,level=logging.DEBUG)
+    else:
+        logging.basicConfig(format=loggingFormat,level=logging.INFO)
         
 
     # Create job queue
@@ -70,12 +79,12 @@ def main():
     # Create workers
     workers = []
     for id in range(WORKERS):
-        worker = Worker(id,jobQueue,cache,VERBOSE)
+        worker = Worker(id,jobQueue,cache)
         workers.append(worker)
         worker.start()
     
     # Create server
-    server = Server(jobQueue,workers,VERBOSE)
+    server = Server(jobQueue,workers)
     server.connect((SERVER_IP,SEVER_PORT))
     server.start()
     

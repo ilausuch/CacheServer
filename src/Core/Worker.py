@@ -8,6 +8,7 @@
 '''
 
 import threading
+import logging
 from Core.Cache import CacheItem
 
 
@@ -15,7 +16,7 @@ class Worker (threading.Thread):
     """
     Server
     """
-    def __init__(self,id, jobQueue, cache, verbose):
+    def __init__(self,id, jobQueue, cache):
         '''
         Initialize thread
         '''
@@ -25,18 +26,17 @@ class Worker (threading.Thread):
         self.id = id
         self.jobQueue = jobQueue
         self.cache = cache
-        self.verbose = verbose
         
         self.working=True
         
-        print ("Worker %d : Ready" % self.id)
+        logging.info("Worker %d : Ready" % self.id)
         
     def run(self):
         '''
         Thread loop
         '''
         
-        print ("Worker %d : Started" % self.id)
+        logging.info("Worker %d : Started" % self.id)
         
         while self.working:
             try:
@@ -63,8 +63,7 @@ class Worker (threading.Thread):
         # Worker adquire connection lock
         connection.lock.acquire()
         
-        if self.verbose:
-            print ("Worker {0} for {1} : Processing {2}".format(self.id, connection.address,op))
+        logging.debug("Worker {0} for {1} : Processing {2}".format(self.id, connection.address,op))
         
         # Get the operation
         try:
@@ -125,15 +124,18 @@ class Worker (threading.Thread):
             try:
                 bank = op["bank"]
                 key = op["key"]
-                
-                # Remove the element
-                self.cache.delete(op["bank"],op["key"])
-
-                # Always will return true
-                connection.sendData({})
-            
             except:
                 connection.sendError("bank and key are required")
+            else:
+                
+                try:
+                    # Remove the element
+                    self.cache.delete(bank,key)
+                except Exception as e:
+                    connection.sendError(str(e))
+                else:
+                    # Always will return true
+                    connection.sendData({})
                 
         
         elif operation == 'touch':
@@ -207,8 +209,7 @@ class Worker (threading.Thread):
         else:        
             connection.sendError("Invalid operation")
         
-        if self.verbose:
-            print ("working %d end job" % self.id)
+        logging.debug("working %d end job" % self.id)
         
         
     def signal_cb(self, watcher, revents):
@@ -223,4 +224,4 @@ class Worker (threading.Thread):
         '''
         self.working = False
         
-        print ("Worker %d : Stoped" % self.id)
+        logging.info("Worker %d : Stoped" % self.id)

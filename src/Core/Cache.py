@@ -87,6 +87,15 @@ class CacheBank:
             # Get the item from the dictionary
             item = self.dictionary[key]
             
+            result = True
+            
+        except:
+            # Return none if i wasn't found
+            item = None
+            
+            result = False
+        
+        else:
             # Check if this item is alive yet
             if not item.checkTimeout():
                 # If isn't alive delete it from the bank
@@ -94,14 +103,72 @@ class CacheBank:
                 
                 # Return none in this case
                 item = None
+                
+                # Will generate an exception
+                result = False
+            else:
+                
+                # Will return the item
+                result = True
+        
+        finally:
+            # Release the lock
+            self.lock.release()
+        
+        if not result:
+            raise(Exception("Key {} doesn't exist".format(key)))
+        else:
+            return item
+        
+    def touch(self, key):
+        '''
+        Get an element from this bank
+        '''
+        
+        # Adquire the lock to protect folowing code
+        self.lock.acquire()
+        
+        try:
+            # Get the item from the dictionary
+            item = self.dictionary[key]
+            
+            # Will return the item
+            result = True
+            
         except:
-            # Return none if i wasn't found
-            item = None
+            
+            # Will generate an exception
+            result = False
         
-        # Release the lock
-        self.lock.release()
+        else:
+            # Check if this item is alive yet
+            if not item.checkTimeout():
+                # If isn't alive delete it from the bank
+                self.delete(key)
+                
+                # Return none in this case
+                item = None
+                
+                # Will generate an exception
+                result = False
+            else:
+                # Reset timeout
+                item.resetTimeout()
+                
+                # Will return the item
+                result = True
+                
         
-        return item
+        finally:
+            # Release the lock
+            self.lock.release()
+        
+        if not result:
+            raise(Exception("Key {} doesn't exist".format(key)))
+        else:
+            return item
+        
+    
     
     def delete(self, key):
         '''
@@ -110,11 +177,24 @@ class CacheBank:
         # Adquire the lock to protect folowing code
         self.lock.acquire()
         
-        # Remove the item from the dictionary 
-        self.dictionary[key] = None
+        try:
+            # Remove the item from the dictionary 
+            del self.dictionary[key]
         
-        # Release the lock
-        self.lock.release()
+        except:
+            # Will generate an exception
+            result = False
+        
+        else:
+            # Will return the item
+            result = True
+            
+        finally:
+            # Release the lock
+            self.lock.release()
+        
+        if not result:
+            raise(Exception("Key {} doesn't exist".format(key)))
         
     def reset(self):
         '''
@@ -227,5 +307,13 @@ class Cache:
     def put(self, bankName, item):
         # Put a intem into a bank
         self.getBank(bankName).put(item)
+        
+    def touch(self,bankName,item):
+        self.getBank(bankName).touch(item)
+        
+    def delete(self,bankName,item):
+        self.getBank(bankName).delete(item)
+        
+    
         
         

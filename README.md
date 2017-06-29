@@ -15,8 +15,8 @@ At the last section of this document you can find some performance studies that
 has been done. The performance usign a simple server with one CPU (AWS instance) 
 is: 
 
-* 12.871 PUT operations per second
-* 11.064 GET operations per second
+* 12.871 PUT operations per second (python 3)
+* 11.064 GET operations per second (python 3)
 
 You can also find a UI for managing the server at https://github.com/ilausuch/CacheServer-Admin
 
@@ -149,6 +149,19 @@ Get an element from a bank
 Example:
 
     {"op":"get","bank":"1","key":"test1"}
+
+### Delete
+
+Deletes an element from a bank
+
+* op: Fixed to "delete"
+* bank: The bank name
+* key: The key of entity
+
+Example:
+
+    {"op":"delete","bank":"1","key":"test1"}
+
 
 ### Touch
 
@@ -287,6 +300,10 @@ First, a client object is required. It needs the cache IP and Port
 #### Get an entry
 
     entry_get(self,bank,key)
+
+#### Delete an entry
+
+    entry_delete(self,bank,key)
         
 #### Touch an entry (Update the timeout of an entry)
 
@@ -322,6 +339,9 @@ Although these are the general operations you can use too
 
     sendOp(self,op)
 
+## Unity tests
+
+
 
 ## Performance Study
 
@@ -331,7 +351,7 @@ A AWS instance has been used with these features:
 - 512 Mb Swap SSD
 - 1 vCPU
 
-Python 3 has been used to run these studies
+Python 3 (v3.5.2) has been used to run these studies
 
 
 ### Study 1
@@ -378,3 +398,23 @@ Results:
 * Test 1 (put): 12.871 operations per second
 * Test 2 (get): 11.064 operations per second
 * Test 3 (get with reconnections): 4.468 operations per second
+
+
+# Python versions study
+
+The aim of this test is to check the speed using (Python 2, Python 3 and Pypy)
+usign testCache_speed.py script. In this case a personal computer has been used, 
+however the important thing is the comparation between the python clients.
+
+Results: 
+
+|                 | 100.000 PUTs     | 100.000 GETs     |
+|-----------------|------------------|------------------|
+| pypy            | 0.150311 seconds | 0.055688 seconds |
+| python (3.6.1)  | 0.462951 seconds | 0.300861 seconds |
+| python (2.7.10) | 1.023987 seconds | 0.880413 seconds |
+
+Conclusion:
+
+* Pypy is faster with hudge difference with others. Is 3 times faster than python3 for puts operations, and 6 times faster for get operations
+* And python 3 is better than python 2. Is 2 times faster for puts and 3 times faster for gets

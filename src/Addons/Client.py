@@ -49,6 +49,12 @@ class Client:
         '''
         return self.sendOp('{"op":"get","bank":"%s","key":"%s"}' % (bank, key))
     
+    def entry_delete(self,bank,key):
+        '''
+        Delete an entry
+        '''
+        return self.sendOp('{"op":"delete","bank":"%s","key":"%s"}' % (bank, key))
+    
     def entry_touch(self,bank,key):
         '''
         Update timeout of an entry
