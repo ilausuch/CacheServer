@@ -64,10 +64,10 @@ class Worker:
 
 			try:
 				# Try to convert to json
-				op = json.loads(line.strip())
+				op = json.loads(line.strip().decode("utf-8"))
 			except:
 				logging.warning("Client send an invalid json {}".format(line.strip()))
-				# TODO: Send error!
+				self.sendError("Invalid json")
 				break
 
 			else:
