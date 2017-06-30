@@ -68,7 +68,7 @@ def main():
 	if VERBOSE:
 		logging.basicConfig(format=loggingFormat, level=logging.DEBUG)
 	else:
-		logging.basicConfig(format=loggingFormat, level=logging.INFO)
+		logging.basicConfig(format=loggingFormat, level=logging.WARNING)
 
 	# Create server
 	server = Server(cache)
