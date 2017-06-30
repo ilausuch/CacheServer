@@ -48,7 +48,6 @@ class Server ():
 		'''
 		Executes the worker
 		'''
-		print ("Worker!")
 		worker = Worker(sock, address, self.cache)
 		worker.run()
 

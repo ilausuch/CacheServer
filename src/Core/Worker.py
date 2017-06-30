@@ -56,7 +56,6 @@ class Worker:
 		logging.debug("Server : {0} sended {1} bytes".format(self.address, sent))
 
 	def run(self):
-		print ("Waiting...")
 		line = self.sock.recv(MAX_LEN)
 
 		while line:
