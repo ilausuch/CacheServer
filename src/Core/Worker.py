@@ -66,7 +66,7 @@ class Worker:
 				# Try to convert to json
 				op = json.loads(line.strip())
 			except:
-				logging.warning("Client send an invalid json")
+				logging.warning("Client send an invalid json {}".format(line.strip()))
 				# TODO: Send error!
 				break
 
