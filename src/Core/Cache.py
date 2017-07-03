@@ -13,6 +13,7 @@ class CacheItem:
     """
     Cache Item
     """
+
     def __init__(self, key, value, lifetime=0):
         '''
         Constructor
@@ -50,6 +51,7 @@ class CacheBank:
     """
     Cache Bank
     """
+
     def __init__(self, name):
         '''
         Constructor
@@ -252,6 +254,7 @@ class Cache:
     """
     Cache library
     """
+
     def __init__(self):
         # Init bank dictionary
         self.banks = {}
@@ -285,7 +288,7 @@ class Cache:
 
     def getBanks(self):
 
-		# Adquire the lock to protect folowing code
+                # Adquire the lock to protect folowing code
         self.lock.acquire()
 
         # Get the keys
