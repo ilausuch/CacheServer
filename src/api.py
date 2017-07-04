@@ -1,7 +1,7 @@
 #! /usr/bin/python
 '''
-	Restful API for Multi-thread Cache system
-	LICENSE MIT @2017 Ivan LAusuch <ilausuch@gmail.com>
+    Restful API for Multi-thread Cache system
+    LICENSE MIT @2017 Ivan LAusuch <ilausuch@gmail.com>
 '''
 
 __author__ = "ilausuch"
@@ -9,17 +9,18 @@ __date__ = "$16-jun-2017 22:31:10$"
 
 import sys
 import json
+import falcon
+import logging
 
-from flask import Flask
-from flask import request
-from flask import make_response
-from flask_cors import CORS
+from falcon_cors import CORS
 
 from Addons.Client import Client
 
 from APICore.Entity import Entity
 from APICore.Bank import Bank
 from APICore.Cache import Cache
+
+logging.basicConfig(level=logging.DEBUG)
 
 # By default values
 SERVER_IP = "127.0.0.1"
@@ -29,11 +30,11 @@ SEVER_PORT = 10001
 Load configuration
 '''
 try:
-    f=open('config.json')
-    data=f.read()
+    f = open('config.json')
+    data = f.read()
 
     try:
-        cfg=json.loads(data)
+        cfg = json.loads(data)
         try:
             SERVER_IP = cfg["SERVER_IP"]
             SEVER_PORT = cfg["SERVER_PORT"]
@@ -50,72 +51,135 @@ except:
 '''
 Create a client
 '''
-client=Client(SERVER_IP,SEVER_PORT)
+client = Client(SERVER_IP, SEVER_PORT)
 
-def sendJson(data):
-    resp = make_response(data)
-    resp.headers['Content-Type'] = "application/json"
-    return resp
-    
 '''
 API
 '''
-# Start flask application
-app = Flask(__name__)
-CORS(app)
-
-@app.route('/')
-def index():
-    return "Cache system API"
-
-'''
-Entries operations
-'''
-
-@app.route('/bank/<bank>/entry/<key>',methods=['GET', 'POST','PUT'])
-def entry(bank,key):
-    
-    if request.method == 'POST':
-        '''
-        Set a entry
-        '''
-        return sendJson(Entity(client, bank, key).post(request.data.decode()))
-    
-    elif request.method == 'PUT':
-        '''
-        Modification of a entry
-        '''
-        return sendJson(Entity(client, bank, key).put(requerst))
-    
-    else:
-        '''
-        Get entry value
-        '''
-        return sendJson(Entity(client, bank, key).get())
-    
-@app.route('/bank/<bank>/entries',methods=['GET'])
-def entries(bank):
-    '''
-    Get entries of a bank
-    '''
-    return sendJson(Bank(client, bank).getKeys())
-
-@app.route('/bank/<bank>',methods=['PUT'])
-def bank(bank):
-    if request.method == 'PUT':
-        '''
-        Modification of a Bank
-        '''
-        return sendJson(Bank(client, bank).put(request))
-
-@app.route('/banks',methods=['GET'])
-def banks():
-    '''
-    Get all banks
-    '''
-    return sendJson(Cache(client).getBanks())
 
 
-if __name__ == "__main__":
-    app.run(host= '0.0.0.0',debug=True)
-    
+def sendJson(resp, data):
+    # resp.headers['Content-Type'] = "application/json"
+    resp.body = json.dumps(data)
+
+
+class index:
+    def on_get(self, req, resp):
+        resp.body = "Cache system API"
+
+
+class entry:
+    def on_get(self, req, resp, **params):
+        try:
+            bank = params["bank"]
+            key = params["key"]
+        except Exception:
+            raise falcon.HTTPBadRequest('Invalid request',
+                                        "bank and key are required parameters")
+
+        try:
+            result = Entity(client, bank, key).get()
+            js = json.loads(result)
+        except Exception:
+            raise falcon.HTTPServiceUnavailable('Service Outage',
+                                                'Internal error', 30)
+        else:
+            if js["status"] == 'error':
+                raise falcon.HTTPBadRequest('Cache Server error message',
+                                            js["message"])
+
+            sendJson(resp, js)
+
+    def on_post(self, req, resp, **params):
+        try:
+            bank = params["bank"]
+            key = params["key"]
+        except Exception:
+            raise falcon.HTTPBadRequest('Invalid request',
+                                        "bank and key are required parameters")
+
+        try:
+            result = Entity(client, bank, key).post(req.stream.read())
+            js = json.loads(result)
+        except Exception:
+            raise falcon.HTTPServiceUnavailable('Service Outage',
+                                                'Internal error', 30)
+        else:
+            if js["status"] == 'error':
+                raise falcon.HTTPBadRequest('Cache Server error message',
+                                            js["message"])
+
+            sendJson(resp, js)
+
+
+class entries:
+    def on_get(self, req, resp, **params):
+        try:
+            bank = params["bank"]
+        except Exception:
+            raise falcon.HTTPBadRequest('Invalid request',
+                                        "bank is a required parameters")
+
+        try:
+            result = Bank(client, bank).getKeys()
+            js = json.loads(result)
+        except Exception:
+            raise falcon.HTTPServiceUnavailable('Service Outage',
+                                                'Internal error', 30)
+        else:
+            if js["status"] == 'error':
+                raise falcon.HTTPBadRequest('Cache Server error message',
+                                            js["message"])
+
+            sendJson(resp, js)
+
+
+class bank:
+    def on_put(self, req, resp, **params):
+
+        try:
+            bank = params["bank"]
+        except Exception:
+            raise falcon.HTTPBadRequest('Invalid request',
+                                        "bank is a required parameters")
+
+        try:
+            result = Bank(client, bank).put(req.params)
+            js = json.loads(result)
+        except Exception:
+            raise falcon.HTTPServiceUnavailable('Service Outage',
+                                                'Internal error', 30)
+        else:
+            if js["status"] == 'error':
+                raise falcon.HTTPBadRequest('Cache Server error message',
+                                            js["message"])
+
+            sendJson(resp, js)
+
+
+class banks:
+    def on_get(self, req, resp, **params):
+        try:
+            result = Cache(client).getBanks()
+            js = json.loads(result)
+        except Exception:
+            raise falcon.HTTPServiceUnavailable('Service Outage',
+                                                'Internal error', 30)
+        else:
+            if js["status"] == 'error':
+                raise falcon.HTTPBadRequest('Cache Server error message',
+                                            js["message"])
+
+            sendJson(resp, js)
+
+
+cors = CORS(allow_all_origins=True, allow_all_headers=True,
+            allow_methods_list=['GET', 'POST', 'PUT', 'OPTIONS'])
+
+api = falcon.API(middleware=[cors.middleware])
+
+api.add_route('/', index())
+api.add_route('/bank/{bank}/entry/{key}', entry())
+api.add_route('/bank/{bank}/entries', entries())
+api.add_route('/bank/{bank}', bank())
+api.add_route('/banks', banks())
