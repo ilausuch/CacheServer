@@ -244,7 +244,7 @@ Example:
 
 To execute use this:
 
-    python3 server.py
+    gunicorn api:api
 
 On console will appear the initialization
 
