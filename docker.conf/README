@@ -1,0 +1,15 @@
+##################################################
+# To create the image.
+##################################################
+
+# Download first, nginx image
+docker pull nginx
+
+# Go to docker.conf directory and execute
+sh createImage.sh
+
+# If it works, it runs a serverCache container automatically
+# You can access to admin application on http://localhost:8080/
+
+# to access to bash of this container
+docker exec -ti serverCache bash
