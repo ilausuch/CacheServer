@@ -101,7 +101,7 @@ class entry:
                                         "bank and key are required parameters")
 
         try:
-            result = Entity(client, bank, key).post(req.stream.read())
+            result = Entity(client, bank, key).post(req.stream.read().decode('UTF-8'))
             js = json.loads(result)
         except Exception:
             raise falcon.HTTPServiceUnavailable('Service Outage',
