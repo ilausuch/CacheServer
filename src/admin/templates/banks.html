@@ -1,0 +1,58 @@
+<div class="header">
+    <h1>Cache</h1>
+</div>
+
+<ol class="breadcrumb">
+  <li ng-class="{'active':!mc.selectedBank}" ng-click="mc.selectedBank=undefined"><a href="#">Banks</a></li>
+  <li ng-if="mc.selectedBank" ng-class="{'active':mc.selectedBank}" ng-click="mc.selectedEntry=undefined"><a href="#">Bank: {{mc.selectedBank}}</a> </li>
+</ol>
+
+<div style="padding:1em">
+    <div ng-if="!mc.selectedBank">
+        <div class="bank" ng-click="mc.addBank()" style="height: 170px;width: 140px;vertical-align: middle;padding-top: 3em; border: 1px silver dotted">
+            <i class="fa fa-plus" aria-hidden="true" style="color:silver;font-size: 400%;"></i>
+            <p style="padding-top:3em"><b>Add Bank</b></p>
+        </div>
+         
+        <div class="bank" ng-repeat="bank in mc.banks" ng-click="mc.selectBank(bank)">
+            <img src="resources/img/database.png" style="width: 10em">
+            <p><b>{{bank}}</b></p>
+        </div>
+    </div>
+
+    <div ng-if="mc.selectedBank">
+        <div class="bank" ng-click="mc.addEntry()" style="height: 170px;width: 140px;vertical-align: middle;padding-top: 3em; border: 1px silver dotted">
+            <i class="fa fa-plus" aria-hidden="true" style="color:silver;font-size: 400%;"></i>
+            <p style="padding-top:3em"><b>Add Entry</b></p>
+        </div>
+        
+        <div class="bank" ng-repeat="entry in mc.bankEntries" ng-click="mc.selectEntry(entry)">
+            <img src="resources/img/entry.png" style="width: 10em">
+            <p><b>{{entry}}</b></p>
+        </div>
+    </div>
+    
+</div>
+
+<il-modal
+    title="'Edit entry'" 
+    show="mc.edit.show"
+    on-cancel="mc.edit.show=false"
+    on-success="mc.edit.save()"
+    >
+    <div>
+        <il-input label="'Bank'" ng-if="mc.edit.showBank" model="mc.edit" field="'bank'"></il-input>
+        <il-input label="'Key'" ng-if="mc.edit.showKey" model="mc.edit" field="'key'"></il-input>
+        <il-input label="'Value'" type="textarea" rows="5" model="mc.edit" field="'value'"></il-input>
+    </div>
+    
+</il-modal>
+
+
+<il-modal 
+	show="mc.edit.showSaved" 
+	is-message=true
+	is-info=true
+>
+	<p>Saved completed</p>
+</il-modal>

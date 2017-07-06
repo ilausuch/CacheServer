@@ -1,0 +1,102 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 12-mar-2017, 18:25:30
+    Author     : ilausuch
+*/
+
+.leftbar{
+    width: 180px;
+    background-color: #2f4050;
+    color:white;
+    position: fixed;
+    left: 0px;
+    top:0px;
+    bottom: 0px;
+}
+
+.content{
+    margin-left: 180px;
+}
+
+.logo{
+    text-align: center;
+    margin: 0.5em 0em;
+    border-bottom: 1px solid #122b40;
+ 
+}
+
+.logo>img{
+    height: 100px;
+    border: 0px;
+}
+
+.menu{
+    padding: 0px 0em 0px 1em;
+    position:relative;
+    margin-left: 4px;
+}
+
+.menuActive{
+    border-left: 4px solid aqua;
+    margin-left: 0px;
+}
+
+.menu>p{
+    cursor:pointer;
+    padding: 0.5em 0em;
+}
+
+.menu>p:hover{
+    background-color: #23527c;
+}
+
+.menuopen{
+    position: absolute;
+    right: 1em;
+    top: 4px;
+}
+
+.menu>ul{
+    list-style-type: none;
+    padding: 0px 0px 0px 1.2em;
+}
+
+.menu>ul>li{
+    padding: 0.5em 0em;
+    color:silver;
+    cursor:pointer;
+}
+
+.menu>ul>li:hover{
+    background-color: #23527c;
+}
+
+.active{
+    color:white !important;
+}
+
+.header{
+    background-color: silver;
+    color:gray;
+    padding: 1em;
+    height: 5em;
+    width: 100%;
+}
+
+.header>h1{
+    margin:0px;
+}
+
+.bank{
+    float:left; 
+    text-align:center;
+    cursor:pointer;
+}
+
+.bank:hover{
+    background-color:#FAFAFA;
+}

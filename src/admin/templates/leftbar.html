@@ -1,0 +1,22 @@
+<div class="logo"> 
+    <img class="logo" src="resources/img/cache.png" alt="docker logo" title="Cache">
+    <p>Control Panel</p>
+</div>
+
+<div class="menu" ng-class="{'menuActive':mc.menu=='connection'}">
+    <p ng-click="mc.goToMenu('connection')"><i class="fa fa-plug" aria-hidden="true"></i> Connection</p>
+</div>
+
+<div ng-if="mc.connected">
+    <div class="menu" ng-class="{'menuActive':mc.menu=='cache'}">
+        <p ng-click="mc.goToMenu('cache')"><i class="fa fa-cube" aria-hidden="true"></i> Cache</p>
+        <i ng-if="mc.menu=='cache'" class="menuopen fa fa-caret-down" aria-hidden="true"></i>
+
+        <ul ng-if="mc.menu=='cache'">
+            <li ng-class="{'active':mc.submenu=='banks'}" ng-click="mc.goToSubMenu('banks')">Banks of cache </li>
+            <!--
+                <li ng-class="{'active':mc.submenu=='operations'}" ng-click="mc.goToSubMenu('operations')">Operations</li>
+            -->
+        </ul>
+    </div>
+</div>

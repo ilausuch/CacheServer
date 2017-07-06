@@ -1,0 +1,35 @@
+<div class="header">
+    <h1>Connection</h1>
+</div>
+
+<div style="padding:1em" ng-if="!mc.connected && !mc.connecting">
+    <p><b>Select your Server Cache API url</b></p>
+    
+    <div class="alert alert-danger" role="alert" ng-if="mc.errorConnecting">Cannot connect.</div>
+    
+    <div class="input-group">
+      <span class="input-group-addon" id="basic-addon1">
+          <i class="fa fa-globe" aria-hidden="true"></i>
+      </span>
+      <input type="text" class="form-control" ng-model="mc.url" placeholder="URL" aria-describedby="basic-addon1">
+    </div>
+
+    <p style="margin-top: 0.5em"><i><b>Important!</b> you must enable cross-domain for this domain or disable crossdomain protection in your browser</i></p>
+    
+    <div style="text-align: center; margin-top: 1em">
+        <button class="btn btn-primary" ng-click="mc.connect()">Connect</button>
+    </div>
+</div>
+
+<div style="padding:1em" ng-if="mc.connecting">
+    Connecting, please wait ...
+</div>
+
+<div style="padding:1em" ng-if="mc.connected">
+    <div class="alert alert-info" role="alert">Cache Server API is connected</div>
+    
+    <div style="text-align: center; margin-top: 1em">
+        <button class="btn btn-default" ng-click="mc.disconnect()">Change API url</button>
+    </div>
+</div>
+
