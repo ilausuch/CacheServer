@@ -19,9 +19,9 @@ import json
 import logging
 
 try:
-	from queue import Queue  # For python 3
+    from queue import Queue  # For python 3
 except:
-	from Queue import Queue  # For python 2
+    from Queue import Queue  # For python 2
 
 from Core.Server import Server
 from Core.Cache import Cache
@@ -42,42 +42,42 @@ cache = Cache()
 
 
 def main():
-	'''
-	MAIN
-	'''
-	try:
-		f = open('config.json')
-		data = f.read()
+    '''
+    MAIN
+    '''
+    try:
+        f = open('config.json')
+        data = f.read()
 
-		try:
-			cfg = json.loads(data)
-			try:
-				SERVER_IP = cfg["SERVER_IP"]
-				SEVER_PORT = cfg["SERVER_PORT"]
-				VERBOSE = cfg["VERBOSE"]
-			except:
-				print ("Required WORKERS, SERVER_IP and SERVER_PORT in config.json")
-				return
-		except:
-			print ("config.json must be a json")
-			return
-	except:
-		print ("Requies the config.json file")
-		return
+        try:
+            cfg = json.loads(data)
+            try:
+                SERVER_IP = cfg["CACHE_SERVER_IP"]
+                SEVER_PORT = cfg["CACHE_SERVER_PORT"]
+                VERBOSE = cfg["CACHE_VERBOSE"]
+            except:
+                print ("Required WORKERS, SERVER_IP and SERVER_PORT in config.json")
+                return
+        except:
+            print ("config.json must be a json")
+            return
+    except:
+        print ("Requies the config.json file")
+        return
 
-	if VERBOSE:
-		logging.basicConfig(format=loggingFormat, level=logging.DEBUG)
-	else:
-		logging.basicConfig(format=loggingFormat, level=logging.WARNING)
+    if VERBOSE:
+        logging.basicConfig(format=loggingFormat, level=logging.DEBUG)
+    else:
+        logging.basicConfig(format=loggingFormat, level=logging.WARNING)
 
-	# Create server
-	server = Server(cache)
-	server.connect((SERVER_IP, SEVER_PORT))
-	server.run()
+    # Create server
+    server = Server(cache)
+    server.connect((SERVER_IP, SEVER_PORT))
+    server.run()
 
 
 '''
 MAIN
 '''
 if __name__ == "__main__":
-	sys.exit(main())
+    sys.exit(main())

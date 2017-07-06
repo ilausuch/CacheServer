@@ -36,10 +36,12 @@ try:
     try:
         cfg = json.loads(data)
         try:
-            SERVER_IP = cfg["SERVER_IP"]
-            SEVER_PORT = cfg["SERVER_PORT"]
+            SERVER_IP = cfg["CACHE_SERVER_IP"]
+            SEVER_PORT = cfg["CACHE_SERVER_PORT"]
+            API_PATH = cfg["API_PATH"]
+
         except:
-            print ("Required SERVER_IP and SERVER_PORT in config.json")
+            print ("Required CACHE_SERVER_IP, CACHE_SERVER_PORT API_PATH in config.json")
             sys.exit(1)
     except:
         print ("config.json must be a json")
@@ -178,8 +180,8 @@ cors = CORS(allow_all_origins=True, allow_all_headers=True,
 
 api = falcon.API(middleware=[cors.middleware])
 
-api.add_route('/', index())
-api.add_route('/bank/{bank}/entry/{key}', entry())
-api.add_route('/bank/{bank}/entries', entries())
-api.add_route('/bank/{bank}', bank())
-api.add_route('/banks', banks())
+api.add_route(API_PATH + '/', index())
+api.add_route(API_PATH + '/bank/{bank}/entry/{key}', entry())
+api.add_route(API_PATH + '/bank/{bank}/entries', entries())
+api.add_route(API_PATH + '/bank/{bank}', bank())
+api.add_route(API_PATH + '/banks', banks())
