@@ -195,6 +195,55 @@ class CacheBank:
         if not result:
             raise(Exception("Key {} doesn't exist".format(key)))
 
+    def incr(self, key, value):
+        '''
+        Increment the value of an element and returns it
+        '''
+
+        # Adquire the lock to protect folowing code
+        self.lock.acquire()
+
+        try:
+            # Get the item from the dictionary
+            item = self.dictionary[key]
+
+            result = True
+
+        except:
+            # Return none if i wasn't found
+            item = None
+
+            result = False
+
+        else:
+            # Check if this item is alive yet
+            if not item.checkTimeout():
+                # If isn't alive delete it from the bank
+                self.delete(key)
+
+                # Return none in this case
+                item = None
+
+                # Will generate an exception
+                result = False
+            else:
+
+                # Will return the item
+                result = True
+
+        finally:
+            # Release the lock
+            self.lock.release()
+
+        if not result:
+            raise(Exception("Key {} doesn't exist".format(key)))
+        else:
+            try:
+                item.value = float(item.value) + value
+                return item
+            except ValueError:
+                raise(Exception("Key {} isn't a number".format(key)))
+
     def reset(self):
         '''
         Remove all elemnts of the bank
@@ -313,3 +362,6 @@ class Cache:
 
     def delete(self, bankName, item):
         self.getBank(bankName).delete(item)
+
+    def incr(self, bankName, key, value):
+        return self.getBank(bankName).incr(key, value)

@@ -89,6 +89,24 @@ class TestStringMethods(unittest.TestCase):
 
         self.assertTrue("Key key1 doesn't exist" in str(context.exception))
 
+    def test_080_incr(self):
+        cache = Cache()
+        cache.put("BankNum", CacheItem("key1", 1))
+        self.assertEqual(cache.get("BankNum", "key1").value, 1)
+        self.assertEqual(cache.incr("BankNum", "key1", 1).value, 2)
+        self.assertEqual(cache.incr("BankNum", "key1", -3).value, -1)
+
+        cache.put("BankNum", CacheItem("key2", "1"))
+        self.assertEqual(cache.incr("BankNum", "key2", 1).value, 2)
+
+        cache.put("BankNum", CacheItem("key3", "1a"))
+        with self.assertRaises(Exception) as context:
+            cache.incr("BankNum", "key3", 1)
+
+        cache.put("BankNum", CacheItem("key4", 1.3))
+        self.assertEqual(cache.get("BankNum", "key4").value, 1.3)
+        self.assertEqual(cache.incr("BankNum", "key4", 1.2).value, 2.5)
+
 
 if __name__ == '__main__':
     unittest.main()

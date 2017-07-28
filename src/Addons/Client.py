@@ -50,6 +50,12 @@ class Client:
         '''
         return self.sendOp('{"op":"get","bank":"%s","key":"%s"}' % (bank, key))
 
+    def entry_incr(self, bank, key, value):
+        '''
+        Get an entry
+        '''
+        return self.sendOp('{"op":"incr","bank":"%s","key":"%s","value":"%s"}' % (bank, key, value))
+
     def entry_delete(self, bank, key):
         '''
         Delete an entry

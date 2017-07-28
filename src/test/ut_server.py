@@ -93,6 +93,26 @@ class Ut_serverTestCase(unittest.TestCase):
         v = self.client.entry_get("Bank1", "key1")
         self.assertTrue(checkError(v))
 
+    def test_080_incr(self):
+        v = self.client.entry_set("BankNum", "key1", 1)
+        self.assertEqual(v, self.ok)
+
+        v = self.client.entry_get("BankNum", "key1")
+        self.assertEqual(v, '{"status": "ok", "data": 1}')
+
+        v = self.client.entry_incr("BankNum", "key1", 1)
+        self.assertEqual(v, '{"status": "ok", "data": 2.0}')
+
+        v = self.client.entry_incr("BankNum", "key1", "a")
+        self.assertEqual(
+            v, '{"status": "error", "message": "The value must be an integer or a float"}')
+
+        v = self.client.entry_set("BankNum", "key2", 1)
+        self.assertEqual(v, self.ok)
+
+        v = self.client.entry_incr("BankNum", "key2", 1)
+        self.assertEqual(v, '{"status": "ok", "data": 2.0}')
+
 
 if __name__ == '__main__':
     unittest.main()
