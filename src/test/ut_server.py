@@ -113,6 +113,13 @@ class Ut_serverTestCase(unittest.TestCase):
         v = self.client.entry_incr("BankNum", "key2", 1)
         self.assertEqual(v, '{"status": "ok", "data": 2.0}')
 
+        v = self.client.entry_set("BankNum", "key3", "a")
+        self.assertEqual(v, self.ok)
+
+        v = self.client.entry_incr("BankNum", "key3", 1)
+        self.assertEqual(
+            v, '{"status": "error", "message": "The value for key key3 isn\'t a number"}')
+
 
 if __name__ == '__main__':
     unittest.main()

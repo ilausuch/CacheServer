@@ -242,7 +242,7 @@ class CacheBank:
                 item.value = float(item.value) + value
                 return item
             except ValueError:
-                raise(Exception("Key {} isn't a number".format(key)))
+                raise(Exception("The value for key {} isn't a number".format(key)))
 
     def reset(self):
         '''
