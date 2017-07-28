@@ -109,6 +109,22 @@ class Ut_serverTestCase(unittest.TestCase):
         r = requests.get(PATH + 'bank/unknownBank/entries')
         self.assertEqual(r.status_code, 200)
 
+    def test_008_get(self):
+        r = requests.post(PATH + 'bank/bankNumbers/entry/entry1',
+                          headers={"Content-Type": "text / plain"},
+                          data="1")
+        self.assertEqual(r.status_code, 200)
+
+        r = requests.put(PATH + 'bank/bankNumbers/entry/entry1?operation=incr&value=1')
+        self.assertEqual(r.status_code, 200)
+
+        r = r.json()
+        self.assertEqual(r["status"], "ok")
+        self.assertEqual(r["data"], 2.0)
+
+        r = requests.put(PATH + 'bank/bankNumbers/entry/entry1?operation=incr&value=a')
+        self.assertNotEqual(r.status_code, 200)
+
 
 if __name__ == '__main__':
     print("It is going to check an api running on {}".format(PATH))

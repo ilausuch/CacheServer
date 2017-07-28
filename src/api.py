@@ -113,6 +113,27 @@ class entry:
 
             sendJson(resp, js)
 
+    def on_put(self, req, resp, **params):
+        try:
+            bank = params["bank"]
+            key = params["key"]
+        except Exception:
+            raise falcon.HTTPBadRequest('Invalid request',
+                                        "bank and key are required parameters")
+
+        try:
+            result = Entity(client, bank, key).put(req.params)
+            js = json.loads(result)
+        except Exception:
+            raise falcon.HTTPServiceUnavailable('Service Outage',
+                                                'Internal error', 30)
+        else:
+            if js["status"] == 'error':
+                raise falcon.HTTPBadRequest('Cache Server error message',
+                                            js["message"])
+
+            sendJson(resp, js)
+
 
 class entries:
     def on_get(self, req, resp, **params):

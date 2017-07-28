@@ -27,18 +27,34 @@ class Entity:
         '''
         return self.client.entry_set(self.bank, self.key, data)
 
-    def put(self, request):
+    def put(self, params):
         '''
         Perform an operation
         - touch: Update lifetime of the entry
         '''
-        operation = request.args.get('operation')
-
-        if operation is None:
+        try:
+            operation = params["operation"]
+        except:
             raise Exception("operation parameter is required")
-
-        elif operation == "touch":
-            return self.client.entry_touch(self.bank, self.key)
-
         else:
-            raise Exception("Unkown operation %s" % operation)
+            if operation == "touch":
+                return self.client.entry_touch(self.bank, self.key)
+
+            elif operation == "incr":
+                try:
+                    value = params['value']
+                except:
+                    raise Exception("value parameter is required")
+                else:
+                    if value is None:
+                        raise Exception("operation parameter is required")
+
+                    try:
+                        fvalue = float(value)
+                    except:
+                        raise Exception("operation parameter is required")
+                    else:
+                        return self.client.entry_incr(self.bank, self.key, fvalue)
+
+            else:
+                raise Exception("Unkown operation %s" % operation)
