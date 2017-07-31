@@ -8,6 +8,11 @@
 import json
 import logging
 import random
+try:
+    from queue import Queue  # Python 3
+except:
+    from Queue import Queue  # Python 2
+
 from eventlet.green import socket
 from Core.Cache import CacheItem
 
@@ -15,10 +20,11 @@ MAX_LEN = 4 * 1024
 
 
 class Worker:
-    def __init__(self, sock, address, cache):
+    def __init__(self, sock, address, context):
         self.sock = sock
         self.address = address
-        self.cache = cache
+        self.context = context
+        self.cache = context["cache"]
         self.id = random.randint(1, 1000)
 
     def send(self, data):
@@ -134,10 +140,15 @@ class Worker:
                 lifetime = 0
 
             # Put the value on cache
-            self.cache.put(bank, CacheItem(key, value, lifetime))
+            item = CacheItem(key, value, lifetime)
+            self.cache.put(bank, item)
 
             # Send OK
             self.sendData({})
+
+            # Notify
+            self.context["updatingQueue"].put({"op": "put", "bank": bank, "key": key,
+                                               "value": value, "timeout": item.timeout}, False)
 
     def op_get(self, op):
         '''
@@ -175,6 +186,9 @@ class Worker:
             else:
                 self.sendData({})
 
+                # Notify
+                self.context["updatingQueue"].put({"op": "delete", "bank": bank, "key": key}, False)
+
     def op_touch(self, op):
         '''
         TOUCH Operation. Reset element timeout
@@ -192,6 +206,10 @@ class Worker:
             else:
                 self.sendData({})
 
+                # Notify
+                self.context["updatingQueue"].put(
+                    {"op": "touch", "bank": bank, "key": key, "timeout": item.timeout}, False)
+
     def op_getTouch(self, op):
         '''
         TOUCH Operation. Reset element timeout
@@ -208,6 +226,10 @@ class Worker:
                 self.sendError(str(e))
             else:
                 self.sendData(item)
+
+                # Notify
+                self.context["updatingQueue"].put(
+                    {"op": "touch", "bank": bank, "key": key, "timeout": item.timeout}, False)
 
     def op_incr(self, op):
         '''
@@ -233,6 +255,10 @@ class Worker:
                 else:
                     self.sendData(item.value)
 
+                    # Notify
+                    self.context["updatingQueue"].put({"op": "put", "bank": bank, "key": key,
+                                                       "value": fvalue, "timeout": item.timeout}, False)
+
     def op_bankList(self, op):
         '''
         List the banks
@@ -257,6 +283,9 @@ class Worker:
 
             # If exists will return the value
             self.sendData({})
+
+            # Notify
+            self.context["updatingQueue"].put({"op": "bankReset", "bank": bank}, False)
 
     def op_bankKeys(self, op):
         '''

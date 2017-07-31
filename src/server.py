@@ -25,20 +25,17 @@ except:
 
 from Core.Server import Server
 from Core.Cache import Cache
+from Core.UpdaterServer import UpdaterServer
+from Core.UpdaterWorker import UpdaterWorker
 
 loggingFormat = '%(asctime)s:%(levelname)s:%(message)s'
 
-
-# By default values
-WORKERS = 4
-SERVER_IP = "127.0.0.1"
-SEVER_PORT = 10001
-VERBOSE = 0
-
-'''
-Cache system
-'''
-cache = Cache()
+# Context
+context = {
+    "cache": Cache(),
+    "updatingQueue": Queue(),
+    "updatingConnections": []
+}
 
 
 def main():
@@ -54,9 +51,10 @@ def main():
             try:
                 SERVER_IP = cfg["CACHE_SERVER_IP"]
                 SEVER_PORT = cfg["CACHE_SERVER_PORT"]
+                CACHE_SERVER_LISTENNER_PORT = cfg["CACHE_SERVER_LISTENNER_PORT"]
                 VERBOSE = cfg["CACHE_VERBOSE"]
             except:
-                print ("Required WORKERS, SERVER_IP and SERVER_PORT in config.json")
+                print ("Required WORKERS, SERVER_IP, SERVER_PORT, CACHE_SERVER_LISTENNER_PORT in config.json")
                 return
         except:
             print ("config.json must be a json")
@@ -70,8 +68,17 @@ def main():
     else:
         logging.basicConfig(format=loggingFormat, level=logging.WARNING)
 
+    # Create updater server
+    updaterServer = UpdaterServer(context)
+    updaterServer.connect((SERVER_IP, CACHE_SERVER_LISTENNER_PORT))
+    updaterServer.start()
+
+    # Create updater worker
+    updaterWorker = UpdaterWorker(context)
+    updaterWorker.start()
+
     # Create server
-    server = Server(cache)
+    server = Server(context)
     server.connect((SERVER_IP, SEVER_PORT))
     server.run()
 
