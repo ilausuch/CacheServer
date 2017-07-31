@@ -185,6 +185,18 @@ Example:
 
     {"op":"touch","bank":"1","key":"test1"}
 
+### Incr
+
+    Increments or decrements a numerical value of an element. This only works if the current value of an element is a number (integer or decimal). The system always apply an a decimal operation
+
+    * op: Fixed to "touch"
+    * bank: The bank name
+    * key: The key of entity
+    * value: The value to increment (integer or decimal)
+
+    Example:
+
+        {"op":"incr","bank":"1","key":"test1","value":-4.3}
 
 ### Bank reset
 
@@ -273,6 +285,12 @@ On console will appear the initialization
 * URL : /bank/\<bank\>/entry/\<key\>?op=touch
 * Method : PUT
 
+#### Incr
+
+* URL : /bank/\<bank\>/entry/\<key\>?op=incr&value=1
+* Method : PUT
+* Additional parameters: value
+
 #### Get all entries
 
 * URL : /bank/\<bank\>/entries
@@ -318,6 +336,10 @@ First, a client object is required. It needs the cache IP and Port
 #### Touch an entry (Update the timeout of an entry)
 
     entry_touch(self,bank,key)
+
+#### Increment
+
+        entry_incr(self,bank,key,value)
 
 #### Get all entries of a bank (only keys)
 
